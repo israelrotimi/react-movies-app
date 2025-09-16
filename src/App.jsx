@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Search from './components/Search'
+import MovieCard from './components/MovieCard'
 
 const API_KEY = import.meta.env.VITE_API_KEY
 const BASE_API_URL = "https://api.themoviedb.org/3/"
@@ -13,19 +14,31 @@ const OPTIONS = {
 
 const App = () => {
   const [searchTerm, setsearchTerm] = useState("")
-  // const [movies, setMovies] = useState([])
-  // const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [movieList, setMovieList] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const fetchMovies = async () => {
     try {
       const endpoint = `${BASE_API_URL}/discover/movie?sort_by=popularity.desc`
       const response = await fetch(endpoint, OPTIONS)
+      
+      if(!response.ok) {
+        throw new Error("Failed to fetch movies");
+      }
+
       const data = await response.json()
-      throw new Error("Error fetching movies")
+
+      if (data.Response === "False") {
+        setErrorMessage(data.Error || "Failed to fetch movies")
+        setMovieList([])
+        return
+      }
+
+      setMovieList(data.results || [])
     } catch (error) {
       console.error("Error fetching movies:", error)
-      setError("Error fetching movies. Please try again later.")
+      setErrorMessage("Error fetching movies. Please try again later.")
     }
   }
   useEffect(() => {
@@ -46,7 +59,11 @@ const App = () => {
 
         <section className="all-movies">
           <h2>All Movies</h2>
-          {error && <p className="text-red-500">{error}</p>}
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+          
+          {movieList && movieList.map((movie) => (
+            <MovieCard key={movie.id} />
+          ))}
         </section>
 
         
