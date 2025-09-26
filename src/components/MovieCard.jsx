@@ -1,6 +1,9 @@
-const MovieCard = () => {
+const MovieCard = ({movie: 
+  {title, vote_average, poster_path, release_date}}) => {
   return (
-    <div>MovieCard</div>
+    <div>
+      <p className="text-white">{title}</p>
+    </div>
   )
 }
 
