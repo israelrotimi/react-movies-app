@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Search from './components/Search'
 import MovieCard from './components/MovieCard'
 import Spinner from './components/Spinner'
+import { useDebounce } from 'react-use'
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY
 const BASE_API_URL = "https://api.themoviedb.org/3/"
@@ -18,13 +19,19 @@ const App = () => {
   const [movieList, setMovieList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
+  // Debouunce search term to prevent making too many requests
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
 
-  const fetchMovies = async () => {
+  useDebounce(()=> setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
+
+  const fetchMovies = async (query = "") => {
     setIsLoading(true);
     setErrorMessage("");
 
     try {
-      const endpoint = `${BASE_API_URL}/discover/movie?sort_by=popularity.desc`
+      const endpoint = query
+        ? `${BASE_API_URL}/search/movie?query=${encodeURIComponent(query)}`
+        : `${BASE_API_URL}/discover/movie?sort_by=popularity.desc`
       const response = await fetch(endpoint, OPTIONS)
       
       if(!response.ok) {
@@ -47,9 +54,10 @@ const App = () => {
       setIsLoading(false);
     }
   }
+
   useEffect(() => {
-    fetchMovies()
-  }, [])
+    fetchMovies(debouncedSearchTerm)
+  }, [debouncedSearchTerm])
 
   return (
     <main className="w-full h-full">
