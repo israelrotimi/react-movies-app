@@ -17,10 +17,13 @@ const OPTIONS = {
 
 const App = () => {
   const [searchTerm, setsearchTerm] = useState("")
-  const [movieList, setMovieList] = useState([])
-  const [trendingMovies, setTrendingMovies] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [movieList, setMovieList] = useState([])
+  const [isLoadingTrending, setIsLoadingTrending] = useState(false)
+  const [errorMessageTrending, setErrorMessageTrending] = useState(null)
+  const [trendingMovies, setTrendingMovies] = useState([])
+  
   // Debouunce search term to prevent making too many requests
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
 
@@ -63,11 +66,14 @@ const App = () => {
 
   const loadTrendingMovies = async () => {
     try {
+      setIsLoadingTrending(true)
+      setErrorMessageTrending("")
       const movies =  await getTrendingMovies()
 
       setTrendingMovies(movies)
+      setIsLoadingTrending(false)
     } catch (error) {
-      console.error("Error fetching trending movies:", error)
+      setErrorMessageTrending(`Error fetching trending movies:, ${error}`)
     }
   }
 
@@ -91,7 +97,13 @@ const App = () => {
           <Search searchTerm={searchTerm} setSearchTerm={setsearchTerm} />
         </header>
 
-        {trendingMovies.length > 0 && (
+        {isLoadingTrending ? (
+          <Spinner />
+        ) : (
+          errorMessageTrending ? (
+            <p className="text-red-500">{errorMessageTrending}</p>
+          ) : (
+         trendingMovies.length > 0 && (
         <section className="trending">
           <h2>Trending Movies</h2>
           <ul>
@@ -103,7 +115,8 @@ const App = () => {
             ))}
           </ul>
         </section>
-        )}
+        )
+      ))}
 
         <section className="all-movies">
           <h2>All Movies</h2>
