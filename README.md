@@ -1,15 +1,32 @@
 # 🎬 React Movies App
 
+![Screenshot of app](/public/readme-img-1.png)
+
 A modern, feature-rich movie discovery and search application built with React and powered by The Movie Database (TMDb) API. Discover trending movies, search for your favorites, and track your search history with Appwrite backend integration.
+
+## 🔴 Live Site
+[https://react-movies-app-theta-nine.vercel.app/](https://react-movies-app-theta-nine.vercel.app/)
+
 
 ## ✨ Features
 
 - 🔍 **Smart Search** - Search for movies with debounced search queries to minimize API calls
+
 - 🎭 **Trending Movies** - Discover currently trending movies automatically loaded on app start like in Netflix
+
+![Screenshot 2](/public/readme-img-2.png)
+
 - 📱 **Responsive Design** - Fully responsive UI that works seamlessly on desktop, tablet, and mobile devices
+
 - ⚡ **Fast Loading** - Loading states with spinner animations for better user experience
+
 - 🎨 **Modern UI** - Beautiful, clean interface with Tailwind CSS styling
+
 - 📊 **Movie Details** - View comprehensive movie information including ratings and descriptions
+
+- 🔧 **Seamless UX** - Errors are handled gracefully and where the API didn't provide a poster image, a graceful fallback is provided like in the screenshot below
+
+![Screenshot 3](/public/readme-img-3.png)
 
 ## 🛠️ Technologies Used
 
